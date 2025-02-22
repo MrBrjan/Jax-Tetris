@@ -5,10 +5,8 @@ const backgroundMusic = document.getElementById('backgroundMusic');
 const explosionSound = document.getElementById('explosionSound');
 
 backgroundMusic.volume = 0.5;
-backgroundMusic.play();
 explosionSound.volume = 0.7;
 
-// Phát nhạc khi người dùng nhấp vào canvas
 canvas.addEventListener('click', () => {
   backgroundMusic.play().catch(error => {
     console.log("Không thể phát nhạc nền:", error);
@@ -130,14 +128,12 @@ function clearLines() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Vẽ nền với chữ "Jax's Tetris"
-  ctx.font = '40px Arial'; // Kích thước chữ
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Màu đen, mờ (opacity 0.2)
+  ctx.font = '40px Arial';
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText("Jax's Tetris", canvas.width / 2, canvas.height / 2); // Đặt ở giữa canvas
+  ctx.fillText("Jax's Tetris", canvas.width / 2, canvas.height / 2);
 
-  // Vẽ lưới
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       if (grid[row][col]) {
@@ -147,7 +143,6 @@ function draw() {
     }
   }
 
-  // Vẽ khối hiện tại
   for (let row = 0; row < currentShape.length; row++) {
     for (let col = 0; col < currentShape[row].length; col++) {
       if (currentShape[row][col]) {
@@ -157,7 +152,6 @@ function draw() {
     }
   }
 
-  // Vẽ particle
   drawParticles();
 }
 
@@ -180,6 +174,41 @@ document.addEventListener('keydown', (e) => {
   } else if (e.key === 'ArrowUp') {
     rotate();
   }
+});
+
+// Thêm sự kiện cảm ứng
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const touchX = touch.clientX - canvas.offsetLeft;
+  const touchY = touch.clientY - canvas.offsetTop;
+
+  if (touchX < canvas.width / 2) {
+    if (!collides(currentShape, currentX - 1, currentY)) {
+      currentX--;
+    }
+  } else {
+    if (!collides(currentShape, currentX + 1, currentY)) {
+      currentX++;
+    }
+  }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const touchY = touch.clientY - canvas.offsetTop;
+
+  if (touchY > canvas.height / 2) {
+    if (!collides(currentShape, currentX, currentY + 1)) {
+      currentY++;
+    }
+  }
+});
+
+canvas.addEventListener('touchend', (e) => {
+  e.preventDefault();
+  rotate();
 });
 
 let dropCounter = 0;
