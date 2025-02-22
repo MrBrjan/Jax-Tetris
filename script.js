@@ -8,6 +8,13 @@ backgroundMusic.volume = 0.5;
 backgroundMusic.play();
 explosionSound.volume = 0.7;
 
+// Phát nhạc khi người dùng nhấp vào canvas
+canvas.addEventListener('click', () => {
+  backgroundMusic.play().catch(error => {
+    console.log("Không thể phát nhạc nền:", error);
+  });
+});
+
 const GRID_SIZE = 30;
 const COLS = canvas.width / GRID_SIZE;
 const ROWS = canvas.height / GRID_SIZE;
