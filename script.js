@@ -4,6 +4,16 @@ const scoreElement = document.getElementById('score');
 const backgroundMusic = document.getElementById('backgroundMusic');
 const explosionSound = document.getElementById('explosionSound');
 
+// Đặt kích thước canvas động
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+// Gọi resize khi tải trang và khi thay đổi kích thước
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
 backgroundMusic.volume = 0.5;
 explosionSound.volume = 0.7;
 
@@ -13,9 +23,10 @@ canvas.addEventListener('click', () => {
   });
 });
 
-const GRID_SIZE = 30;
-const COLS = canvas.width / GRID_SIZE;
-const ROWS = canvas.height / GRID_SIZE;
+// Tính GRID_SIZE dựa trên kích thước màn hình
+const GRID_SIZE = Math.floor(Math.min(canvas.width, canvas.height) / 20); // 20 ô theo chiều nhỏ nhất
+const COLS = Math.floor(canvas.width / GRID_SIZE);
+const ROWS = Math.floor(canvas.height / GRID_SIZE);
 let score = 0;
 
 let grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
@@ -128,7 +139,8 @@ function clearLines() {
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.font = '40px Arial';
+  // Điều chỉnh kích thước chữ "Jax's Tetris" theo canvas
+  ctx.font = `${Math.floor(canvas.width / 10)}px Arial`;
   ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
